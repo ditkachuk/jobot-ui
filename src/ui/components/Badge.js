@@ -1,5 +1,6 @@
-import React from 'react';
-import { styled, Box, css, th } from '@smooth-ui/core-sc';
+import { Box, css, th } from '@smooth-ui/core-sc';
+
+import { escapedStyled, passArgs } from '../utils/escapedStyled';
 
 const badgeTheme = {
     primary: css`
@@ -48,15 +49,14 @@ const sizeStyle = {
     `,
 };
 
-export const Badge = ({ link, ...props }) => {
-    const Component = styled(Box)`
-        cursor: ${link === 'true' ? 'pointer' : 'inherit'};
-        ${p => p.variant && badgeTheme[p.variant]};
-        ${p => p.size && sizeStyle[p.size]};
-    `;
-
-    return <Component {...props} />;
-};
+export const Badge = escapedStyled(['link'], ({ link }) =>
+passArgs`
+    cursor: ${console.log(link) || link === 'true' ? 'pointer' : 'inherit'};
+`,
+passArgs`
+    ${p => p.variant && badgeTheme[p.variant]};
+    ${p => p.size && sizeStyle[p.size]};
+`)(Box);
 
 Badge.defaultProps = {
     size: 'md',

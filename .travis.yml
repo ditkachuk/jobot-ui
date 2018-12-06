@@ -8,13 +8,15 @@ jobs:
     - stage: tests
       script:
         - yarn test:ci
-    - stage: storybook release
-      if: branch = master
+    - stage: storybook build
       script:
         - yarn build-storybook
+    - stage: storybook release
+      if: NOT type = pull_request AND branch = master
+      script:
         - yarn deploy-storybook -- --ci
     - stage: npm release
-      if: branch = master
+      if: NOT type = pull_request AND branch = master
       before_deploy:
       - yarn build:lib
       deploy:
@@ -22,5 +24,3 @@ jobs:
         provider: npm
         email: "webdev@experium.ru"
         api_key: "$NPM_API_KEY"
-        on:
-          branch: master
